@@ -12,4 +12,7 @@ int main(){
 
     // size_t x = 10;
 
-  
+    // printf("size of x: %zu\n", sizeof(x));
+
+    return EXIT_SUCCESS;
+}
