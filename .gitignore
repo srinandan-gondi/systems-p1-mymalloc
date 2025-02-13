@@ -3,3 +3,4 @@
 *.pdf
 main.c
 test.c
+.vscode/
