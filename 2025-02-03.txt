@@ -1,0 +1,197 @@
+CS 214 / Pointers, the heap, types
+==================================
+
+
+// can you explain this code?
+char *p = get_a_string_from_somewhere();
+int i = 0;
+while (*p++) i++;
+
+
+int *p = some_int_array_of_length(n);
+int *q = p + n;
+int i = 0;
+while (p != q) i += *p++;
+
+
+
+dynamic allocation
+------------------
+
+manually allocate and deallocate space in the heap
+
+heap: region of memory managed by the run-time system
+	(unrelated to the priority queue sometimes called a heap)
+	
+our interface
+
+	malloc() - use malloc to allocate a heap object
+		returns a pointer to that object
+		
+	free() - deallocates a heap object when it is no longer needed
+	
+
+
+how can we use malloc with objects of different types?
+	how does it know how much space to reserve?
+		-> the argument says how many chars (bytes) the object needs to be
+
+	how can it return an appropriate pointer?
+		-> it can't!
+		-> malloc returns a "void pointer"
+			contains only location, no specific type information
+			
+
+	void *malloc(size_t);
+	
+void pointers have no associated type, only a location
+	we can compare these for equality, or with NULL
+	we cannot dereference them
+	
+	void pointers can be freely cast to any other pointer type
+	
+char *p = (char *)malloc(100);
+	if successful, malloc() allocates a 100-byte object and returns
+	a pointer
+	we automatically convert this to a char pointer, so we can use it
+
+
+what if we ask for too much space?
+	malloc() returns NULL if it cannot satisfy our request
+	
+
+NULL is a special pointer value that represents "nothing"
+
+	NULL cannot be dereferenced
+
+
+	void free(void *);
+		
+		C automatically demotes any pointer to void *, when needed
+
+
+how big are types?
+
+we should not assume that C's types have any particular size
+	(except char, which is always size 1)
+	
+the sizeof() operator gives us the size of a type
+
+
+	sizeof(int)      -- length of an int
+	sizeof(double)   -- length of a double
+	sizeof(int *)    -- length of a pointer to an int
+
+
+to allocate an array of 20 ints
+
+	malloc(20 * sizeof(int));
+	
+to allocate an array of some variable size
+
+	malloc(n * sizeof(int));
+	
+
+
+note: we normally use sizeof() with types
+
+	we can use sizeof() with expressions, but be careful
+	
+	sizeof(*p)   -- size of p[0], assuming p is not void *
+	
+	
+int a[20];
+int *p = a;
+
+	sizeof(a) == 20 * sizeof(int)
+	sizeof(p) == sizeof(int *)     !!!	
+
+
+
+function pointers
+-----------------
+
+all data in memory has a location
+-> this includes your function code
+
+function pointers allow us to refer to functions indirectly
+
+
+	int foo(int);  // function that takes one int and returns an int
+	
+	
+	writing foo with no arguments gives us a pointer
+	
+to store it in a variable, we need to declare it as a function pointer variable
+
+
+	int (*fp)(int);
+	
+	fp = foo;
+	
+	
+consider comparison functions
+
+	a generic sorting function must take a comparison function as
+		a parameter
+		
+	int compare(void *, void *);
+	
+	
+void qsort(
+	void *array,		// pointer to array to sort
+	size_t length,		// number of elements in array
+	size_t elem_size,	// size of each array element
+	int (*compare)(void *, void *)		// comparison function
+);
+	
+
+
+
+void bsort(void *a, size_t nelems, size_t elemlength,
+		int (*compare)(void *, void *))
+{
+	void *t = malloc(elemlength);   // FIXME: check for null?
+	assert(a != NULL);
+	assert(compare != NULL);
+	
+	for (int i = 0; i < nelems; i++) {
+		for (int j = 1; j < nelems; j++) {
+			void *p = (char *) a + elemlength * (j - 1);
+			void *q = (char *) a + elemlemgth * j;
+			
+			if (compare(p, q) > 0) {
+				// swap
+				memcpy(t, p, elemlength);
+				memcpy(p, q, elemlength);
+				memcpy(q, t, elemlength);
+			}
+		}
+	}
+	
+	free(t);
+}
+	
+int compare_ints(void *a, void *b)
+{
+	int *x = a;
+	int *y = b;
+	
+	return *x - *y;
+}
+
+int reverse_compare_ints(void *a, void *b)
+{
+	int *x = a;
+	int *y = b;
+	
+	return *y - *x;
+}
+
+
+
+usage:
+
+int a[] = { 1, 7, 8, 2, 4 };
+
+bsort(a, 6, sizeof(int), compare_ints);

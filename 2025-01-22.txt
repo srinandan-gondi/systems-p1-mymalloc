@@ -1,0 +1,124 @@
+CS 214 / Intro
+==============
+
+Systems Programming
+
+Prof. David Menendez <davemm@cs.rutgers.edu>
+    Please put [CS214] in your subject line
+    Please use the discussion tab on Canvas for course questions
+    
+    Office: Hill Center, 448
+
+Recitations should start next week
+
+Systems Programming: what is it?
+
+- Language run-time systems
+    e.g., standard library features (file IO, memory management, etc.)
+
+- Operating Systems (OS)
+    - shared implementation of commonly used features
+    - management of shared resources
+        - protect programs from other programs
+        - protect users from other users
+        - maintain abstractions
+    - common utilities & user interface
+
+
+C Programming Language
+Unix-style operating systems (e.g., Linux, MacOS, etc.)
+    - file IO
+    - file system
+    - multitasking, process control
+    - network communication (sockets)
+    - multithreading (pthread)
+    
+Project-oriented class
+    three/four programming assignments
+    these are two-person assignments
+    why?
+        - most of you will need to work with others in the future
+        - opportunity to work with others
+        
+    tips
+        - be very clear about who you are working with
+        - communicate
+        - determine clear goals and responsibilities
+        - don't wait until the last few days to see what the other person
+            wrote
+
+Reference compiler for C is GCC 11.4
+Reference environment is the Instructional Lab (iLab)
+
+    GCC = GNU Compiler Collection
+    GNU = GNU's Not Unix
+    
+
+Why C?
+------
+
+C is a relatively simple language
+     - gives good visibility to low-level aspects of the system
+     - designed to run (and be run) on low-powered hardware
+
+C vs Java
+- similar syntax
+- similar orientation
+
+Java is interpreted
+    java source code --javac--> "bytecode" --java--> execution
+
+    MyClass.java  -->  MyClass.class
+
+C is compiled
+    myprogram.c --gcc--> myprogram
+    
+    compiler translates source code to machine code
+        source code - text readable by humans
+        machine code - binary format understood by the CPU
+
+
+Compiling programs with gcc
+
+gcc hello.c
+    -> compile, link, create an executable called "a.out"
+
+gcc hello.c -o hello
+    -> compile, link, create executable called "hello"
+
+
+gcc -c hello.c
+    -> compile, create an "object file" called "hello.o"
+
+gcc hello.o -o hello
+    -> link hello.o with standard library, create executable called "hello"
+    
+
+Recommended options for GCC
+
+-g      include debugger information
+-Wall  include useful warning messages
+-std=c99  disable features that are not part of 1999 C standard
+
+-fsanitize=address      includes run-time memory safety checks (AddressSanitizer)
+-fsanitize=undefined    includes run-time undefined behavior checks (UBSan)
+
+
+
+Java has classes and methods
+C has functions
+    functions are named bits of code that you can call (with parameters)
+
+Java has a hierarchical namespace
+    classes have names like com.sun.foo.bar.MyClass
+    methods are specific to a class (different classes can have methods
+        with the same name)
+
+C has a flat name space
+    all functions and global variables must have unique names
+    can be difficult to coordinate large projects
+        - not really an issue for us
+
+implications:
+    no implicit parameters (e.g., this)
+    no polymorphism or overloading
