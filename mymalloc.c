@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mymalloc.h"
+#include <stdint.h>
 
 #define MEMLENGTH 4096
 // is this excluding or including the first 8 bytes of the heap?
@@ -11,6 +12,8 @@ static union {
     double not_used;
 
 } heap;
+
+//testing commits
 
 static int initialized = 0;
 
